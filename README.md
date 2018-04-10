@@ -1,6 +1,6 @@
 # React Native Tutorial
 
-Fubon React-Native tutorial, that contains two projects:
+Fubon React Native tutorial, that contains two projects:
 
 * RNCustomerApp - tutorial project
 * rn-customer-app-server - fake data server
@@ -26,7 +26,7 @@ Getting into rn-customer-app-server directory.
 $ cd rn-customer-app-server
 ```
 
-If you haven't installed node_modules yet, enter the following command.
+If you haven't installed node_modules yet, enter the following command.
 
 ```sh
 $ npm install
@@ -46,7 +46,7 @@ Getting into RNCustomerApp directory.
 $ cd RNCustomerApp
 ```
 
-If you haven't installed node_modules yet, enter the following command.
+If you haven't installed node_modules yet, enter the following command.
 
 ```sh
 $ npm install
@@ -57,7 +57,9 @@ Running RNCustomerApp.
 ```sh
 $ react-native run-ios 
 ```
+
 or
+
 ```sh
 $ react-native run-android
 ```

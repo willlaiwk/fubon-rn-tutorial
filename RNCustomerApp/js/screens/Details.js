@@ -10,31 +10,69 @@ const Details = (props) => {
   const customer = props.navigation.state.params.customer;
   return (
     <View style={styles.container}>
-      <View style={styles.imageView}>
+      <View style={styles.contentHeader}>
         <Image
           style={styles.image}
           source={{ uri: customer.avatar }}
         />
+        <Text style={styles.name}>{customer.first_name} {customer.last_name}</Text>
+        <Text style={styles.company}>{customer.company}</Text>
       </View>
-      <Text>{customer.first_name} {customer.last_name}</Text>
-      <Text>{customer.company}</Text>
-      <Text>{customer.email}</Text>
-      <Text>{customer.phone}</Text>
+      <View style={styles.content}>
+        <View style={styles.infoGroup}>
+          <Text style={styles.infoLabel}>Email</Text>
+          <Text style={styles.infoText}>{customer.email}</Text>
+        </View>
+        <View style={styles.infoGroup}>
+          <Text style={styles.infoLabel}>Phone</Text>
+          <Text style={styles.infoText}>{customer.phone}</Text>
+        </View>
+      </View>
     </View>
   );
 };
 
 const styles = {
   container: {
-    flex: 1
+    flex: 1,
+    backgroundColor: '#fff'
   },
-  imageView: {
-    alignItems: 'center'
+  contentHeader: {
+    alignItems: 'center',
+    padding: 16
   },
-  image: { 
-    width: 50,
-     height: 50 
-    }
+  content: {
+    paddingHorizontal: 30
+  },
+  image: {
+    width: 64,
+    height: 64,
+    borderColor: '#eee',
+    borderWidth: 1,
+    borderRadius: 32
+  },
+  name: {
+    fontSize: 20,
+    marginTop: 3,
+    marginBottom: 2
+  },
+  company: {
+    fontSize: 18,
+    color: '#777'
+  },
+  infoGroup: {
+    flexDirection: 'row',
+    marginBottom: 10
+  },
+  infoLabel: {
+    flex: 1,
+    fontSize: 16,
+  },
+  infoText: {
+    flex: 2,
+    fontSize: 15,
+    color: '#777',
+  }
 };
 
 export default Details;

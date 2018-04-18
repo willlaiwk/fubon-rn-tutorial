@@ -7,21 +7,6 @@ import {
   Button
 } from 'react-native';
 import axios from 'axios';
-import { Map } from 'immutable';
-// const Edit = (props) => {
-//   console.log('Edit:', props.navigation.state.params.customer);
-//   const customer = props.navigation.state.params.customer;
-//   return (
-//     <View>
-//       <Text>Edit Screen</Text>
-//       <TextInput value={customer.first_name} />
-//       <TextInput value={customer.last_name} />
-//       <TextInput value={customer.company} />
-//       <TextInput value={customer.email} />
-//       <TextInput value={customer.phone} />
-//     </View>
-//   );
-// }
 
 
 class Edit extends React.Component {
@@ -66,7 +51,6 @@ class Edit extends React.Component {
   }
 
   render() {
-    // const customer = this.props.navigation.state.params.customer;
     return (
       <View style={styles.container}>
         <View style={styles.formGroup}>

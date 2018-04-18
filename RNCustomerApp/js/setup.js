@@ -32,9 +32,9 @@ const RootStack = StackNavigator(
     },
     Edit: {
       screen: Edit,
-      navigationOptions: {
-        title: 'Edit'
-      },
+      // navigationOptions: {
+      //   title: 'Edit'
+      // },
     },
   },
   {

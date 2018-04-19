@@ -4,28 +4,22 @@ import { connect } from 'react-redux';
 import {
   View,
   Text,
-  TextInput,
-  Platform,
   Button,
-  TouchableHighlight,
-  Alert
+  Platform,
+  TextInput
 } from 'react-native';
-import axios from 'axios';
-import {
-  updateCustomer,
-  deleteCustomer,
-} from '../actions';
+import { createCustomer } from '../actions';
 
-class Edit extends React.Component {
+class Add extends React.Component {
   static navigationOptions = ({ navigation }) => ({
-    title: 'Edit',
+    title: 'New Customer',
     headerRight: (
       <Button
         onPress={() => {
-          navigation.state.params.handleUpdate();
+          navigation.state.params.handleCreate();
         }}
-        title="Update"
-        color="#e67e22"
+        title="Create"
+        color="#1a6efe"
       />
     )
   })
@@ -33,19 +27,19 @@ class Edit extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      customer: props.customer
+      customer: {}
     };
   }
 
   componentDidMount() {
-    this.props.navigation.setParams({ handleUpdate: this._onSubmit });
+    this.props.navigation.setParams({ handleCreate: this._onSubmit });
   }
 
   _onSubmit = () => {
     const customer = Object.assign({}, this.state.customer);
-    this.props.updateCustomer(customer)
+    this.props.createCustomer(customer)
       .then(() => {
-        alert('更新成功!');
+        alert('新增成功!');
         this.props.navigation.pop();
       });
 
@@ -57,14 +51,6 @@ class Edit extends React.Component {
       newCustomer[key] = text;
       return { customer: newCustomer };
     });
-  }
-
-  _handleDelete = () => {
-    this.props.deleteCustomer({ ...this.props.customer })
-      .then(() => {
-        alert('刪除成功!');
-        this.props.navigation.popToTop();
-      });
   }
 
   render() {
@@ -111,30 +97,10 @@ class Edit extends React.Component {
             value={this.state.customer.phone}
           />
         </View>
-        <View style={styles.formGroup}>
-          <TouchableHighlight
-            underlayColor="#c0392b"
-            style={styles.deleteButton}
-            onPress={() => {
-              Alert.alert(
-                'Warning',
-                `Do you want to delete the customer ?`,
-                [
-                  { text: 'Cancel', style: 'cancel' },
-                  { text: 'Delete', style: 'destructive', onPress: () => { this._handleDelete() } },
-                ],
-                { cancelable: false }
-              )
-            }}
-          >
-            <Text style={styles.deleteButtonText}>刪除</Text>
-          </TouchableHighlight>
-        </View>
       </View>
     );
   }
 }
-
 
 const styles = {
   container: {
@@ -161,27 +127,11 @@ const styles = {
         paddingBottom: 3
       }
     })
-  },
-  deleteButton: {
-    backgroundColor: '#e74c3c',
-    width: '100%',
-    height: 44,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  deleteButtonText: {
-    color: '#fff',
-    fontSize: 16
   }
 };
 
-const mapStateToProps = (state) => ({
-  customer: state.customer.customer
-});
-
 const mapDispatchToProps = (dispatch) => ({
-  updateCustomer: bindActionCreators(updateCustomer, dispatch),
-  deleteCustomer: bindActionCreators(deleteCustomer, dispatch)
-});
+  createCustomer: bindActionCreators(createCustomer, dispatch)
+})
 
-export default connect(mapStateToProps, mapDispatchToProps)(Edit);
+export default connect(null, mapDispatchToProps)(Add);

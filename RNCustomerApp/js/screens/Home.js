@@ -1,4 +1,6 @@
 import React from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import {
   View,
   Text,
@@ -7,55 +9,30 @@ import {
   Image,
   Dimensions,
   Platform,
-  TouchableOpacity
+  Button,
+  TouchableOpacity,
+  TouchableHighlight
 } from 'react-native';
-import axios from 'axios';
+import {
+  fetchCustomers,
+  selectCustomer
+} from '../actions';
 
 const { width, height } = Dimensions.get('window');
 const isIPhoneX = Math.max(width, height) >= 812;
 
 class Home extends React.Component {
-  constructor(props) {
-    super(props);
-    // Component State
-    this.state = {
-      customers: []
-    };
-  }
-
-  componentWillMount() {
-    console.log('componentWillMount: 畫面顯示前做的事');
-  }
-
   componentDidMount() {
-    console.log('componentDidMount: 畫面顯示後做的事');
     // 撈初始資料
-    // const requset = axios.get('http://localhost:7654/api/customers');
-    const requset = axios.get('http://172.20.10.2:7654/api/customers');
-    requset
-      .then((resp) => {
-        this.setState({ customers: resp.data });
-      })
-      .catch((err) => {
-        const st = err.response.status;
-        if (st === 404) {
-
-        } else if (st === 500) {
-
-        } else {
-          console.log('err:', err);
-        }
-      });
+    this.props.fetchCustomers();
   }
 
   _renderItem = ({ item }) => (
     <TouchableOpacity
-    onPress={() => {
-      // todo: 換頁 => Details
-      this.props.navigation.navigate('Details', {
-        customer: item
-      });
-    }}
+      onPress={() => {
+        this.props.selectCustomer(item);
+        this.props.navigation.navigate('Details');
+      }}
     >
       <View style={styles.itemContainer}>
         <View style={styles.itemLeft}>
@@ -74,20 +51,33 @@ class Home extends React.Component {
 
   render() {
     return (
-      <View style={{ flex: 1 }}>
+      <View style={styles.container}>
         <FlatList
           keyExtractor={item => String(item.id)}
           contentContainerStyle={styles.flatlistContent}
-          data={this.state.customers}
+          data={this.props.customers}
           renderItem={this._renderItem}
           ItemSeparatorComponent={() => <View style={styles.separator} />}
         />
+        <TouchableHighlight
+          underlayColor="#d35400"
+          style={styles.addButton}
+          onPress={() => {
+            this.props.navigation.navigate('Add');
+          }}
+        >
+          <Text style={styles.addButtonText}>ADD</Text>
+        </TouchableHighlight>
       </View>
     );
   }
 }
 
 const styles = {
+  container: {
+    flex: 1,
+    position: 'relative'
+  },
   itemContainer: {
     flexDirection: 'row',
     paddingTop: 8,
@@ -126,7 +116,35 @@ const styles = {
     marginLeft: '4%',
     width: '96%',
     backgroundColor: '#ccc'
+  },
+  addButton: {
+    position: 'absolute',
+    bottom: 30,
+    right: 30,
+    width: 64,
+    height: 64,
+    backgroundColor: '#e67e22',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 2, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 4,
+    elevation: 2,
+    borderRadius: 64 / 2,
+    borderColor: '#000',
+  },
+  addButtonText: {
+    color: '#fff'
   }
 }
 
-export default Home;
+const mapStateToProps = (state) => ({
+  customers: state.customer.customers
+});
+const mapDispatchToProps = (dispatch) => ({
+  fetchCustomers: bindActionCreators(fetchCustomers, dispatch),
+  selectCustomer: bindActionCreators(selectCustomer, dispatch)
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

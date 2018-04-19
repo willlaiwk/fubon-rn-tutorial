@@ -1,11 +1,18 @@
 import React from 'react';
+import { createStore, applyMiddleware } from 'redux';
+import reduxThunk from 'redux-thunk';
+import { Provider } from 'react-redux';
 import {
   Button
 } from 'react-native';
+import { StackNavigator } from 'react-navigation';
+import reducers from './reducers';
 import Home from './screens/Home';
+import Add from './screens/Add';
 import Details from './screens/Details';
 import Edit from './screens/Edit';
-import { StackNavigator } from 'react-navigation';
+
+const store = createStore(reducers, {}, applyMiddleware(reduxThunk));
 
 const RootStack = StackNavigator(
   {
@@ -16,25 +23,14 @@ const RootStack = StackNavigator(
         headerBackTitle: 'Back'
       },
     },
+    Add: {
+      screen: Add,
+    },
     Details: {
       screen: Details,
-      navigationOptions: ({ navigation }) => {
-        const customer = navigation.state.params.customer;
-        return {
-          title: `${customer.first_name} ${customer.last_name}`,
-          headerBackTitle: 'Cancel',
-          headerRight: <Button title="Edit" onPress={() => {
-            // todo: 換頁 => Edit
-            navigation.navigate('Edit', { customer });
-          }} />
-        }
-      },
     },
     Edit: {
       screen: Edit,
-      // navigationOptions: {
-      //   title: 'Edit'
-      // },
     },
   },
   {
@@ -42,6 +38,10 @@ const RootStack = StackNavigator(
   }
 );
 
-const App = () => <RootStack />;
+const App = () => (
+  <Provider store={store}>
+    <RootStack />
+  </Provider>
+);
 
 export default App;

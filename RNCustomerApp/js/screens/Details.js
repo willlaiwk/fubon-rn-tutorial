@@ -1,36 +1,82 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import {
   View,
   Text,
-  Image
+  Image,
+  Button
 } from 'react-native';
 
+class Details extends React.Component {
+  static navigationOptions = ({ navigation }) => ({
+    headerBackTitle: 'Cancel',
+    headerRight: <Button title="Edit" onPress={() => {
+      navigation.state.params.handleRouteEdit();
+    }} />
+  })
 
-const Details = (props) => {
-  const customer = props.navigation.state.params.customer;
-  return (
-    <View style={styles.container}>
-      <View style={styles.contentHeader}>
-        <Image
-          style={styles.image}
-          source={{ uri: customer.avatar }}
-        />
-        <Text style={styles.name}>{customer.first_name} {customer.last_name}</Text>
-        <Text style={styles.company}>{customer.company}</Text>
-      </View>
-      <View style={styles.content}>
-        <View style={styles.infoGroup}>
-          <Text style={styles.infoLabel}>Email</Text>
-          <Text style={styles.infoText}>{customer.email}</Text>
+  componentDidMount() {
+    this.props.navigation.setParams({ handleRouteEdit: this._handleRouteEdit });
+  }
+
+  _handleRouteEdit = () => {
+    this.props.navigation.navigate('Edit');
+  }
+
+  render() {
+    const customer = this.props.customer;
+    return (
+      <View style={styles.container}>
+        <View style={styles.contentHeader}>
+          <Image
+            style={styles.image}
+            source={{ uri: customer.avatar }}
+          />
+          <Text style={styles.name}>{customer.first_name} {customer.last_name}</Text>
+          <Text style={styles.company}>{customer.company}</Text>
         </View>
-        <View style={styles.infoGroup}>
-          <Text style={styles.infoLabel}>Phone</Text>
-          <Text style={styles.infoText}>{customer.phone}</Text>
+        <View style={styles.content}>
+          <View style={styles.infoGroup}>
+            <Text style={styles.infoLabel}>Email</Text>
+            <Text style={styles.infoText}>{customer.email}</Text>
+          </View>
+          <View style={styles.infoGroup}>
+            <Text style={styles.infoLabel}>Phone</Text>
+            <Text style={styles.infoText}>{customer.phone}</Text>
+          </View>
         </View>
       </View>
-    </View>
-  );
-};
+    );
+  }
+}
+
+// const Details = (props) => {
+//   console.log('Detils props:', props);
+//   // const customer = props.navigation.state.params.customer;
+//   // const customer = props.customer;
+//   return (
+//     <View style={styles.container}>
+//       <View style={styles.contentHeader}>
+//         <Image
+//           style={styles.image}
+//           source={{ uri: customer.avatar }}
+//         />
+//         <Text style={styles.name}>{customer.first_name} {customer.last_name}</Text>
+//         <Text style={styles.company}>{customer.company}</Text>
+//       </View>
+//       <View style={styles.content}>
+//         <View style={styles.infoGroup}>
+//           <Text style={styles.infoLabel}>Email</Text>
+//           <Text style={styles.infoText}>{customer.email}</Text>
+//         </View>
+//         <View style={styles.infoGroup}>
+//           <Text style={styles.infoLabel}>Phone</Text>
+//           <Text style={styles.infoText}>{customer.phone}</Text>
+//         </View>
+//       </View>
+//     </View>
+//   );
+// };
 
 const styles = {
   container: {
@@ -75,4 +121,8 @@ const styles = {
   }
 };
 
-export default Details;
+const mapStateToProps = (state) => ({
+  customer: state.customer.customer
+});
+
+export default connect(mapStateToProps)(Details);

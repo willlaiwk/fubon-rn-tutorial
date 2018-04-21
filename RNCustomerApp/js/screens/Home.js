@@ -1,4 +1,6 @@
 import React from 'react';
+// import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import {
   View,
   Text,
@@ -7,9 +9,13 @@ import {
   Image,
   Dimensions,
   Platform,
-  TouchableOpacity
+  TouchableOpacity,
+  Button
 } from 'react-native';
-import axios from 'axios';
+import {
+  increase,
+  fetchCustomers,
+} from '../actions';
 
 const { width, height } = Dimensions.get('window');
 const isIPhoneX = Math.max(width, height) >= 812;
@@ -17,10 +23,6 @@ const isIPhoneX = Math.max(width, height) >= 812;
 class Home extends React.Component {
   constructor(props) {
     super(props);
-    // Component State
-    this.state = {
-      customers: []
-    };
   }
 
   componentWillMount() {
@@ -28,34 +30,17 @@ class Home extends React.Component {
   }
 
   componentDidMount() {
-    console.log('componentDidMount: 畫面顯示後做的事');
-    // 撈初始資料
-    // const requset = axios.get('http://localhost:7654/api/customers');
-    const requset = axios.get('http://172.20.10.2:7654/api/customers');
-    requset
-      .then((resp) => {
-        this.setState({ customers: resp.data });
-      })
-      .catch((err) => {
-        const st = err.response.status;
-        if (st === 404) {
-
-        } else if (st === 500) {
-
-        } else {
-          console.log('err:', err);
-        }
-      });
+    this.props.fetchCustomers();
   }
 
   _renderItem = ({ item }) => (
     <TouchableOpacity
-    onPress={() => {
-      // todo: 換頁 => Details
-      this.props.navigation.navigate('Details', {
-        customer: item
-      });
-    }}
+      onPress={() => {
+        // todo: 換頁 => Details
+        this.props.navigation.navigate('Details', {
+          customer: item
+        });
+      }}
     >
       <View style={styles.itemContainer}>
         <View style={styles.itemLeft}>
@@ -78,7 +63,7 @@ class Home extends React.Component {
         <FlatList
           keyExtractor={item => String(item.id)}
           contentContainerStyle={styles.flatlistContent}
-          data={this.state.customers}
+          data={this.props.customers}
           renderItem={this._renderItem}
           ItemSeparatorComponent={() => <View style={styles.separator} />}
         />
@@ -129,4 +114,16 @@ const styles = {
   }
 }
 
-export default Home;
+const mapStateToProps = (state) => ({
+  customers: state.customer.customerList,
+  numk: state.app.num
+});
+
+// const mapDispatchToProps = (dispatch) => ({
+//   increase: bindActionCreators(increase, dispatch)
+// });
+
+export default connect(mapStateToProps, {
+  increase: increase,
+  fetchCustomers
+})(Home);

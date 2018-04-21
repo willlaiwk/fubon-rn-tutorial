@@ -1,0 +1,2 @@
+export const INCREASE = 'INCREASE23445';
+export const FETCH_CUSTOMERS = 'FETCH_CUSTOMERS';

@@ -23,7 +23,8 @@ app.get('/api/customers', (req, res) => {
 
 app.post('/api/customers', (req, res) => {
   const id = customers.reduce((prevId, current) => Math.max(prevId, current.id), 0);
-  const customer = { ...req.body, id };
+  const customer = { ...req.body, id: id + 1 };
+  customer.avatar = 'https://robohash.org/velanimisoluta.png?size=72x72&set=set1';
   customers.push(customer);
   res.send({ result: true, customer });
 });
@@ -46,7 +47,7 @@ app.delete('/api/customers/:id', (req, res) => {
   const customerIndex = customers.findIndex(m => m.id == id);
   if (customerIndex >= 0) {
     customers.splice(customerIndex, 1);
-    res.send({ result: true, customers });
+    res.send({ result: true });
   } else {
     res.status(400).send('找不到 customer !');
   }

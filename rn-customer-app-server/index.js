@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const customers = require('./customers');
 
-const fakeUser = { username: 'admin', password: '123456' };
+const fakeUser = { account: 'admin', password: '123456', username: 'Admin' };
 
 const app = express();
 
@@ -10,9 +10,9 @@ app.use(bodyParser.json());
 
 app.post('/api/login', (req, res) => {
   const { account, password } = req.body;
-  if (account === fakeUser.username && password === fakeUser.password) {
+  if (account === fakeUser.account && password === fakeUser.password) {
     res.send({
-      username: 'John Doe',
+      username: fakeUser.username,
       token: 'testtokendsfdsdsvlsdvsdjlsdvjslvjfsjdlfj',
       salt: 'sddd'
     });

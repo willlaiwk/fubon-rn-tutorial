@@ -11,7 +11,11 @@ app.use(bodyParser.json());
 app.post('/api/login', (req, res) => {
   const { account, password } = req.body;
   if (account === fakeUser.username && password === fakeUser.password) {
-    res.send({ token: 'testtokendsfdsdsvlsdvsdjlsdvjslvjfsjdlfj', salt: 'sddd' });
+    res.send({
+      username: 'John Doe',
+      token: 'testtokendsfdsdsvlsdvsdjlsdvjslvjfsjdlfj',
+      salt: 'sddd'
+    });
   } else {
     res.status(401).send('Unauthorized');
   }

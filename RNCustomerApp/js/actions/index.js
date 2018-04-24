@@ -4,7 +4,9 @@ import {
   SELECT_CUSTOMER,
   UPDATE_CUSTOMER,
   DELETE_CUSTOMER,
-  CREATE_CUSTOMER
+  CREATE_CUSTOMER,
+  USER_LOGIN,
+  USER_LOGOUT
 } from './types';
 
 const DOMAIN_NAME = 'http://172.20.10.2:7654';
@@ -62,3 +64,16 @@ export const createCustomer = (customer) => {
       });
   }
 }
+
+export const userLogin = (account, password) => {
+  return function(dispatch) {
+    return axios.post(`${DOMAIN_NAME}/api/login`, { account, password })
+      .then((resp) => {
+        dispatch({ type: USER_LOGIN, payload: resp.data });
+      });
+  }
+};
+
+export const userLogout = () => ({
+  type: USER_LOGOUT
+});

@@ -14,19 +14,39 @@ import {
 } from 'react-native';
 import {
   fetchCustomers,
-  selectCustomer
+  selectCustomer,
+  userLogout
 } from '../actions';
 
 const { width, height } = Dimensions.get('window');
 const isIPhoneX = Math.max(width, height) >= 812;
 
 class Home extends React.Component {
+  static navigationOptions = ({ navigation }) => ({
+    title: 'Customers',
+    headerBackTitle: 'Back',
+    headerRight: (
+      <Button
+        onPress={() => {
+          navigation.state.params.handleLogout();
+        }}
+        title="Logout"
+        color="#e67e22"
+      />
+    )
+  })
+
   constructor(props) {
     super(props);
   }
 
   componentDidMount() {
+    this.props.navigation.setParams({ handleLogout: this._handleLogout });
     this.props.fetchCustomers();
+  }
+
+  _handleLogout = () => {
+    this.props.userLogout();
   }
 
   _renderItem = ({ item }) => (
@@ -147,5 +167,6 @@ const mapStateToProps = (state) => ({
 
 export default connect(mapStateToProps, {
   fetchCustomers,
-  selectCustomer
+  selectCustomer,
+  userLogout
 })(Home);

@@ -1,13 +1,16 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import {
   View,
   Text,
-  Image
+  Image,
+  Button
 } from 'react-native';
 
 
 const Details = (props) => {
-  const customer = props.navigation.state.params.customer;
+  // const customer = props.navigation.state.params.customer;
+  const customer = props.customer;
   return (
     <View style={styles.container}>
       <View style={styles.contentHeader}>
@@ -30,6 +33,20 @@ const Details = (props) => {
       </View>
     </View>
   );
+};
+
+Details.navigationOptions = ({ navigation }) => {
+  return {
+    headerBackTitle: 'Cancel',
+    headerRight: (
+      <Button
+        title="Edit"
+        onPress={() => {
+          navigation.navigate('Edit');
+        }}
+      />
+    )
+  }
 };
 
 const styles = {
@@ -75,4 +92,8 @@ const styles = {
   }
 };
 
-export default Details;
+const mapStateToProps = (state) => ({
+  customer: state.customer.selectedCustomer
+});
+
+export default connect(mapStateToProps)(Details);

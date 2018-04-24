@@ -1,5 +1,4 @@
 import React from 'react';
-// import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {
   View,
@@ -10,11 +9,12 @@ import {
   Dimensions,
   Platform,
   TouchableOpacity,
-  Button
+  Button,
+  TouchableHighlight
 } from 'react-native';
 import {
-  increase,
   fetchCustomers,
+  selectCustomer
 } from '../actions';
 
 const { width, height } = Dimensions.get('window');
@@ -25,10 +25,6 @@ class Home extends React.Component {
     super(props);
   }
 
-  componentWillMount() {
-    console.log('componentWillMount: 畫面顯示前做的事');
-  }
-
   componentDidMount() {
     this.props.fetchCustomers();
   }
@@ -36,10 +32,8 @@ class Home extends React.Component {
   _renderItem = ({ item }) => (
     <TouchableOpacity
       onPress={() => {
-        // todo: 換頁 => Details
-        this.props.navigation.navigate('Details', {
-          customer: item
-        });
+        this.props.selectCustomer(item);
+        this.props.navigation.navigate('Details');
       }}
     >
       <View style={styles.itemContainer}>
@@ -59,7 +53,7 @@ class Home extends React.Component {
 
   render() {
     return (
-      <View style={{ flex: 1 }}>
+      <View style={styles.container}>
         <FlatList
           keyExtractor={item => String(item.id)}
           contentContainerStyle={styles.flatlistContent}
@@ -67,12 +61,25 @@ class Home extends React.Component {
           renderItem={this._renderItem}
           ItemSeparatorComponent={() => <View style={styles.separator} />}
         />
+        <TouchableHighlight
+          underlayColor="#d35400"
+          style={styles.addButton}
+          onPress={() => {
+            this.props.navigation.navigate('Add');
+          }}
+        >
+          <Text style={styles.addButtonText}>ADD</Text>
+        </TouchableHighlight>
       </View>
     );
   }
 }
 
 const styles = {
+  container: {
+    flex: 1,
+    position: 'relative'
+  },
   itemContainer: {
     flexDirection: 'row',
     paddingTop: 8,
@@ -111,19 +118,34 @@ const styles = {
     marginLeft: '4%',
     width: '96%',
     backgroundColor: '#ccc'
+  },
+  addButton: {
+    position: 'absolute',
+    bottom: 35,
+    right: 30,
+    width: 64,
+    height: 64,
+    backgroundColor: '#e67e22',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 2, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 4,
+    elevation: 2,
+    borderRadius: 64 / 2,
+    borderColor: '#000',
+  },
+  addButtonText: {
+    color: '#fff'
   }
 }
 
 const mapStateToProps = (state) => ({
-  customers: state.customer.customerList,
-  numk: state.app.num
+  customers: state.customer.customerList
 });
 
-// const mapDispatchToProps = (dispatch) => ({
-//   increase: bindActionCreators(increase, dispatch)
-// });
-
 export default connect(mapStateToProps, {
-  increase: increase,
-  fetchCustomers
+  fetchCustomers,
+  selectCustomer
 })(Home);
